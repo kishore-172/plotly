@@ -1,0 +1,52 @@
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+import plotly.io as pio
+
+# Create your Plotly graphs
+fig1 = go.Figure(go.Scatter(x=[1, 2, 3], y=[4, 5, 6], mode='markers', name='Graph 1'))
+fig2 = go.Figure(go.Bar(x=[1, 2, 3], y=[4, 5, 6], name='Graph 2'))
+
+# Create a single figure with multiple subplots
+fig = make_subplots(rows=1, cols=2, subplot_titles=('Graph 1', 'Graph 2'))
+fig.add_trace(fig1.data[0], row=1, col=1)
+fig.add_trace(fig2.data[0], row=1, col=2)
+
+# Set layout properties
+fig.update_layout(title='Multiple Plotly Graphs in One PDF', showlegend=False)
+
+
+
+import plotly.graph_objects as go
+import plotly.io as pio
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+
+# Create your Plotly graphs (replace this with your own graphs)
+graph1 = go.Figure(data=[go.Scatter(x=[1, 2, 3], y=[4, 5, 6])])
+graph2 = go.Figure(data=[go.Bar(x=[1, 2, 3], y=[4, 5, 6])])
+
+# Export each graph as an image
+image1 = 'graph1.png'
+image2 = 'graph2.png'
+pio.write_image(graph1, image1)
+pio.write_image(graph2, image2)
+
+# Create a PDF and add the images to it
+pdf_file = 'output.pdf'
+c = canvas.Canvas(pdf_file, pagesize=letter)
+
+# Define the positions and sizes of the images on the PDF
+x1, y1, width1, height1 = 50, 650, 250, 250
+x2, y2, width2, height2 = 50, 350, 250, 250
+
+# Draw the images on the PDF
+c.drawImage(image1, x1, y1, width1, height1)
+c.drawImage(image2, x2, y2, width2, height2)
+
+# Save the PDF
+c.save()
+
+# Clean up - remove the temporary images
+import os
+os.remove(image1)
+os.remove(image2)
